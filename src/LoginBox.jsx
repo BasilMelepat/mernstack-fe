@@ -20,7 +20,7 @@ function LoginBox() {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:3001/login', { email, password });
+            const response = await axios.post('https://mernstack-be.vercel.app/login', { email, password });
             console.log('Login response:', response);
             
             if (response.data === "Success" || response.data.message === "Success") {
