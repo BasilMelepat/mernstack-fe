@@ -13,6 +13,7 @@ function LoginBox() {
     const navigate = useNavigate();
 
     axios.defaults.withCredentials = true;
+    axios.defaults.headers.common['Content-Type'] = 'application/json';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
