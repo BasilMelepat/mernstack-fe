@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import {Routes, Route, BrowserRouter} from 'react-router-dom'
 import './App.css';
@@ -13,8 +12,9 @@ function App() {
   return (
     <div className="App">
     <>
-      <Navbar/>
+      
       <BrowserRouter>
+        <Navbar/>
         <Routes>
           <Route path='/register' element={<SignupBox />} />
           <Route path='/login' element={<LoginBox />} />
