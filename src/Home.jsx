@@ -12,7 +12,7 @@ function Home() {
     useEffect(() => {
         const verifyAuth = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/verify');
+                const response = await axios.get('https://mernstack-be-24wo.onrender.com/verify');
                 if (response.data.authenticated) {
                     setUserData(response.data.user);
                 } else {
@@ -31,7 +31,7 @@ function Home() {
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:3001/logout');
+            await axios.post('https://mernstack-be-24wo.onrender.com/logout');
             navigate('/login');
         } catch (error) {
             console.error('Logout error:', error);
