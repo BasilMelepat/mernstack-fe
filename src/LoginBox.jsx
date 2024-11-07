@@ -13,7 +13,6 @@ function LoginBox() {
     const navigate = useNavigate();
 
     axios.defaults.withCredentials = true;
-    axios.defaults.headers.common['Content-Type'] = 'application/json';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -21,16 +20,7 @@ function LoginBox() {
         setLoading(true);
 
         try {
-            const response = await axios.post('https://mernstack-be.vercel.app/login', 
-                { email, password },
-                {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    withCredentials: true,
-                }
-            );
-
+            const response = await axios.post('http://localhost:3001/login', { email, password });
             console.log('Login response:', response);
             
             if (response.data === "Success" || response.data.message === "Success") {
