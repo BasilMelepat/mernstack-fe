@@ -7,47 +7,55 @@ function Home() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    axios.defaults.withCredentials = true;
-
 useEffect(() => {
-    const verifyAuth = async () => {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            navigate('/login');
-            return;
-        }
+        const verifyAuth = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
 
+            try {
+                const response = await axios.get(
+                    'https://mernstack-be-24wo.onrender.com/verify',
+                    {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    }
+                );
+                
+                if (response.data.authenticated) {
+                    setUserData(response.data.user);
+                } else {
+                    localStorage.removeItem('token');
+                    navigate('/login');
+                }
+            } catch (error) {
+                console.error('Authentication error:', error);
+                localStorage.removeItem('token');
+                navigate('/login');
+            } finally {
+                setLoading(false);
+            }
+        };
+        verifyAuth();
+    }, [navigate]);
+
+    const handleLogout = async () => {
         try {
-            const response = await axios.get(
-                'https://mernstack-be-24wo.onrender.com/verify',
+            const token = localStorage.getItem('token');
+            await axios.post(
+                'https://mernstack-be-24wo.onrender.com/logout',
+                {},  // empty body
                 {
                     headers: { 'Authorization': `Bearer ${token}` }
                 }
             );
-            
-            if (response.data.authenticated) {
-                setUserData(response.data.user);
-            } else {
-                localStorage.removeItem('token');
-                navigate('/login');
-            }
-        } catch (error) {
-            console.error('Authentication error:', error);
-            localStorage.removeItem('token');
-            navigate('/login');
-        } finally {
-            setLoading(false);
-        }
-    };
-    verifyAuth();
-}, [navigate]);
-
-    const handleLogout = async () => {
-        try {
-            await axios.post('https://mernstack-be-24wo.onrender.com/logout');
+            localStorage.removeItem('token'); // Remove token on logout
             navigate('/login');
         } catch (error) {
             console.error('Logout error:', error);
+            localStorage.removeItem('token'); // Remove token even if logout fails
+            navigate('/login');
         }
     };
 
