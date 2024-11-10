@@ -16,34 +16,25 @@ function LoginBox() {
         e.preventDefault();
         setError('');
         setLoading(true);
-
+        
         try {
-            const response = await axios.post('https://mernstack-be-24wo.onrender.com/login', { 
-                email, 
-                password 
-            });
+            const response = await axios.post(
+                'https://mernstack-be-24wo.onrender.com/login', 
+                { email, password }
+            );
             
             console.log('Login response:', response);
             
             if (response.data.token) {
                 localStorage.setItem('token', response.data.token);
-                
-                
-                
                 navigate('/home');
             } else {
-                setError('Login failed: Authentication token not received');
+                setError('Login failed: No token received');
             }
         } catch (err) {
             console.error('Login error:', err);
-            
+            setError(err.response?.data?.error || 'An error occurred during login');
             localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            
-            setError(
-                err.response?.data?.error || 
-                'Invalid credentials or server error'
-            );
         } finally {
             setLoading(false);
         }
@@ -85,6 +76,6 @@ function LoginBox() {
             <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
         </div>
     );
-};
+}
 
 export default LoginBox;
