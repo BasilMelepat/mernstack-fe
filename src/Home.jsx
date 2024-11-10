@@ -16,12 +16,7 @@ useEffect(() => {
             }
 
             try {
-                const response = await axios.get(
-                    'https://mernstack-be-24wo.onrender.com/verify',
-                    {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }
-                );
+                const response = await axios.get("https://mernstack-be-24wo.onrender.com/verify",{headers:{'Authorization':`Bearer ${token}`}});
                 
                 if (response.data.authenticated) {
                     setUserData(response.data.user);
