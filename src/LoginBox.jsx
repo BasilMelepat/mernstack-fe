@@ -18,7 +18,7 @@ function LoginBox() {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:3001/login', { 
+            const response = await axios.post('https://mernstack-be-24wo.onrender.com/login', { 
                 email, 
                 password 
             });
