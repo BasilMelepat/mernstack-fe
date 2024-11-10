@@ -11,26 +11,36 @@ function LoginBox() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
-
-    axios.defaults.withCredentials = true;
+    
+    // Remove this line since we're not using cookies
+    // axios.defaults.withCredentials = true;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
-
+        
         try {
-            const response = await axios.post('https://mernstack-be-24wo.onrender.com/login', { email, password });
+            const response = await axios.post(
+                'https://mernstack-be-24wo.onrender.com/login', 
+                { email, password }
+            );
+            
             console.log('Login response:', response);
             
-            if (response.data === "Success" || response.data.message === "Success") {
+            // Check for token in response
+            if (response.data.token) {
+                // Store token in localStorage
+                localStorage.setItem('token', response.data.token);
                 navigate('/home');
             } else {
-                setError(response.data.error || 'Login failed. Please try again.');
+                setError('Login failed: No token received');
             }
         } catch (err) {
             console.error('Login error:', err);
             setError(err.response?.data?.error || 'An error occurred during login');
+            // Clear any existing token on login failure
+            localStorage.removeItem('token');
         } finally {
             setLoading(false);
         }
@@ -72,6 +82,6 @@ function LoginBox() {
             <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
         </div>
     );
-};
+}
 
 export default LoginBox;
