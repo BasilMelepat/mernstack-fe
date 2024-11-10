@@ -9,25 +9,38 @@ function Home() {
 
     axios.defaults.withCredentials = true;
 
-    useEffect(() => {
-        const verifyAuth = async () => {
-            try {
-                const response = await axios.get('https://mernstack-be-24wo.onrender.com/verify');
-                if (response.data.authenticated) {
-                    setUserData(response.data.user);
-                } else {
-                    navigate('/login');
-                }
-            } catch (error) {
-                console.error('Authentication error:', error);
-                navigate('/login');
-            } finally {
-                setLoading(false);
-            }
-        };
+useEffect(() => {
+    const verifyAuth = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            navigate('/login');
+            return;
+        }
 
-        verifyAuth();
-    }, [navigate]);
+        try {
+            const response = await axios.get(
+                'https://mernstack-be-24wo.onrender.com/verify',
+                {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                }
+            );
+            
+            if (response.data.authenticated) {
+                setUserData(response.data.user);
+            } else {
+                localStorage.removeItem('token');
+                navigate('/login');
+            }
+        } catch (error) {
+            console.error('Authentication error:', error);
+            localStorage.removeItem('token');
+            navigate('/login');
+        } finally {
+            setLoading(false);
+        }
+    };
+    verifyAuth();
+}, [navigate]);
 
     const handleLogout = async () => {
         try {
