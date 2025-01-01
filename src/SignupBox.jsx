@@ -4,7 +4,7 @@ import CustomButton from './Common/CustomButton.jsx';
 import CustomInput from './Common/CustomInput.jsx';
 import { Link } from 'react-router-dom';
 import { useState } from "react";
-import axios from 'axios'
+import axios from './axios'
 import { useNavigate } from "react-router-dom";
 
 function SignupBox() {
@@ -15,7 +15,7 @@ function SignupBox() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    axios.post('http://localhost:3001/register', {name, email, password})
+    axios.post('/register', {name, email, password})
     .then(result => {console.log(result)
       navigate('/login')
     })

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import axios from './axios';
 import { useNavigate } from 'react-router-dom';
 
 function Home() {
@@ -12,7 +12,7 @@ function Home() {
     useEffect(() => {
         const verifyAuth = async () => {
             try {
-                const response = await axios.get('http://localhost:3001/verify');
+                const response = await axios.get('/verify');
                 if (response.data.authenticated) {
                     setUserData(response.data.user);
                 } else {
@@ -31,7 +31,7 @@ function Home() {
 
     const handleLogout = async () => {
         try {
-            await axios.post('http://localhost:3001/logout');
+            await axios.post('/logout');
             navigate('/login');
         } catch (error) {
             console.error('Logout error:', error);
