@@ -12,25 +12,25 @@ function LoginBox() {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    axios.defaults.withCredentials = true;
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         setLoading(true);
-
+        
         try {
             const response = await axios.post('/login', { email, password });
             console.log('Login response:', response);
             
-            if (response.data === "Success" || response.data.message === "Success") {
+            if (response.data.token) {
+                localStorage.setItem('token', response.data.token);
                 navigate('/home');
             } else {
-                setError(response.data.error || 'Login failed. Please try again.');
+                setError('Login failed: No token received');
             }
         } catch (err) {
             console.error('Login error:', err);
             setError(err.response?.data?.error || 'An error occurred during login');
+            localStorage.removeItem('token');
         } finally {
             setLoading(false);
         }
@@ -72,6 +72,6 @@ function LoginBox() {
             <p>Don't have an account? <Link to="/register">Sign Up</Link></p>
         </div>
     );
-};
+}
 
 export default LoginBox;

@@ -7,25 +7,30 @@ function Home() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    axios.defaults.withCredentials = true;
-
-    useEffect(() => {
+useEffect(() => {
         const verifyAuth = async () => {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                navigate('/login');
+                return;
+            }
+
             try {
                 const response = await axios.get('/verify');
                 if (response.data.authenticated) {
                     setUserData(response.data.user);
                 } else {
+                    localStorage.removeItem('token');
                     navigate('/login');
                 }
             } catch (error) {
                 console.error('Authentication error:', error);
+                localStorage.removeItem('token');
                 navigate('/login');
             } finally {
                 setLoading(false);
             }
         };
-
         verifyAuth();
     }, [navigate]);
 
@@ -35,6 +40,8 @@ function Home() {
             navigate('/login');
         } catch (error) {
             console.error('Logout error:', error);
+            localStorage.removeItem('token'); // Remove token even if logout fails
+            navigate('/login');
         }
     };
 
