@@ -3,7 +3,6 @@ import './SignupBox.css';
 import CustomButton from './Common/CustomButton.jsx';
 import CustomInput from './Common/CustomInput.jsx';
 import { Link } from 'react-router-dom';
-import { useState } from "react";
 import axios from './axios'
 import { useNavigate } from "react-router-dom";
 
